@@ -1,0 +1,6 @@
+[submodule "sentence-transformers-feedstock" ]
+    path = include/foo
+    branch = master
+    url = ../sentence-transformers-feedstock
+
+

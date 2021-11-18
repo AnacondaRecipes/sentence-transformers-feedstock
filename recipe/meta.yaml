@@ -1,5 +1,5 @@
 {% set name = "sentence-transformers" %}
-{% set version = "2.0.0" %}
+{% set version = "0.4.1.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 492eae8e9973f2b758d66d74325661e2816f0b6637365554a1eca9bcf60088ed
+  sha256: 750b0bb3deaa541865ae179434132108c43fc59498c6073a083aafca8a3ac710
 
 build:
   number: 0
@@ -29,6 +29,9 @@ requirements:
     - transformers >=3.1
 
 test:
+  # workaround python 3.10 bug
+  require:
+    - python < 3.10
   imports:
     - sentence_transformers
     - sentence_transformers.datasets
