@@ -29,6 +29,9 @@ requirements:
     - transformers >=3.1
 
 test:
+  # workaround python 3.10 bug
+  require:
+    - python < 3.10
   imports:
     - sentence_transformers
     - sentence_transformers.datasets
