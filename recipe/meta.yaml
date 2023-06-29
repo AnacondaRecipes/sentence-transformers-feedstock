@@ -15,7 +15,6 @@ build:
   skip: True  # [py<36]
   number: 0
   script: {{ PYTHON }} -m pip install . -vvv --no-deps --no-build-isolation
-  noarch: python
 
 requirements:
   host:
