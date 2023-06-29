@@ -1,5 +1,5 @@
 {% set name = "sentence-transformers" %}
-{% set version = "2.0.0" %}
+{% set version = "2.2.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,26 +7,34 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 492eae8e9973f2b758d66d74325661e2816f0b6637365554a1eca9bcf60088ed
+  sha256: dbc60163b27de21076c9a30d24b5b7b6fa05141d68cf2553fa9a77bf79a29136
 
 build:
+  # skip s390x and ppc64le because torchvision does not support these
+  skip: True  # [linux and (s390x or ppc64le)]
+  skip: True  # [py<36]
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  script: {{ PYTHON }} -m pip install . -vvv --no-deps --no-build-isolation
   noarch: python
 
 requirements:
   host:
     - pip
-    - python >=3.6
+    - python
+    - wheel
+    - setuptools
   run:
     - nltk
     - numpy
-    - python >=3.6
+    - python
     - scikit-learn
     - scipy
-    - pytorch >=1.0.1
+    - pytorch >=1.6.0
+    - torchvision
     - tqdm
-    - transformers >=3.1
+    - transformers >=4.6.0,<5.0.0
+    - sentencepiece
+    - huggingface_hub >=0.4.0
 
 test:
   imports:
@@ -37,6 +45,10 @@ test:
     - sentence_transformers.models
     - sentence_transformers.models.tokenizer
     - sentence_transformers.readers
+  commands:
+    - pip check
+  requires:
+    - pip
 
 about:
   home: https://github.com/UKPLab/sentence-transformers
@@ -44,6 +56,12 @@ about:
   license_family: APACHE
   license_file: LICENSE
   summary: Sentence Embeddings using BERT / RoBERTa / XLNet
+  description: |
+    This framework provides an easy method to compute dense vector representations for sentences, 
+    paragraphs, and images. The models are based on transformer networks like 
+    BERT / RoBERTa / XLM-RoBERTa etc. and achieve state-of-the-art performance in various task. 
+    Text is embedding in vector space such that similar text is close and can efficiently be 
+    found using cosine similarity.
   doc_url: https://pypi.org/project/sentence-transformers/
   dev_url: https://github.com/UKPLab/sentence-transformers
 
