@@ -15,7 +15,7 @@ build:
   skip: True  # [((osx and x86_64) or win-64) and py>310]
   skip: True  # [py<36]
   number: 0
-  script: {{ PYTHON }} -m pip install . -vvv --no-deps --no-build-isolation
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   host:
