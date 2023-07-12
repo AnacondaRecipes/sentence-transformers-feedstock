@@ -11,11 +11,11 @@ source:
 
 build:
   # skip s390x and ppc64le because torchvision does not support these
-  skip: True  # [linux and (s390x or ppc64le)]
+  skip: True  # [linux and (ppc64le or s390x)]
+  skip: True  # [((osx and x86_64) or win-64) and py>310]
   skip: True  # [py<36]
   number: 0
-  script: {{ PYTHON }} -m pip install . -vvv --no-deps --no-build-isolation
-  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   host:
@@ -25,7 +25,8 @@ requirements:
     - setuptools
   run:
     - nltk
-    - numpy
+    - numpy  # [not (linux and x86_64)]
+    - numpy >=1.22  # [linux and x86_64]
     - python
     - scikit-learn
     - scipy
