@@ -12,9 +12,8 @@ source:
 build:
   # skip s390x and ppc64le because torchvision does not support these
   skip: True  # [linux and (ppc64le or s390x)]
-  skip: True  # [((osx and x86_64) or win-64) and py>310]
   skip: True  # [py<36]
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
@@ -46,10 +45,10 @@ test:
     - sentence_transformers.models
     - sentence_transformers.models.tokenizer
     - sentence_transformers.readers
-  commands:
-    - pip check
   requires:
     - pip
+  commands:
+    - pip check
 
 about:
   home: https://github.com/UKPLab/sentence-transformers
