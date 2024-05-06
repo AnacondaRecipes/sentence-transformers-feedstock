@@ -25,17 +25,15 @@ requirements:
     - setuptools
   run:
     - nltk
-    - numpy  # [not (linux and x86_64)]
-    - numpy >=1.22  # [linux and x86_64]
+    - numpy {{ numpy }}
     - python
     - scikit-learn
     - scipy
-    - pytorch >=1.6.0
-    - torchvision
+    - pytorch >=1.11.0
     - tqdm
-    - transformers >=4.6.0,<5.0.0
-    - sentencepiece
-    - huggingface_hub >=0.4.0
+    - transformers >=4.34.0,<5.0.0
+    - huggingface_hub >=0.15.1
+    - pillow
 
 test:
   imports:
