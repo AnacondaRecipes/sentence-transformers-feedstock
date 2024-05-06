@@ -36,6 +36,9 @@ requirements:
     - pillow
 
 test:
+  source_files:
+    - tests
+    - pytest.ini
   imports:
     - sentence_transformers
     - sentence_transformers.datasets
@@ -46,8 +49,10 @@ test:
     - sentence_transformers.readers
   requires:
     - pip
+    - pytest
   commands:
     - pip check
+    - pytest
 
 about:
   home: https://github.com/UKPLab/sentence-transformers
