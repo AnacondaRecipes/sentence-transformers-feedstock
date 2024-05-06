@@ -39,6 +39,7 @@ test:
   source_files:
     - tests
     - pytest.ini
+    - examples
   imports:
     - sentence_transformers
     - sentence_transformers.datasets
