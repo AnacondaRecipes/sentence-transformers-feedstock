@@ -1,13 +1,13 @@
 {% set name = "sentence-transformers" %}
-{% set version = "2.2.2" %}
+{% set version = "2.7.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: dbc60163b27de21076c9a30d24b5b7b6fa05141d68cf2553fa9a77bf79a29136
+  url: https://github.com/UKPLab/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: f474f390a30c6e4ebf58d525bb55b3ff5f3d9c4085b3eb99ffa987c1bed08c16
 
 build:
   # skip s390x and ppc64le because torchvision does not support these
