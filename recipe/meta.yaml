@@ -12,8 +12,9 @@ source:
 build:
   # skip s390x and ppc64le because torchvision does not support these
   skip: True  # [linux and (ppc64le or s390x)]
-  skip: True  # [py<36]
-  number: 1
+  # transformers not on python 3.12
+  skip: True  # [py<36 or py>311]
+  number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
