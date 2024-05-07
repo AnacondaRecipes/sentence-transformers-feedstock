@@ -25,7 +25,7 @@ requirements:
     - setuptools
   run:
     - nltk
-    - numpy {{ numpy }}
+    - numpy
     - python
     - scikit-learn
     - scipy
