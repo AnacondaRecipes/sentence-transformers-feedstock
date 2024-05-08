@@ -24,6 +24,8 @@ requirements:
     - wheel
     - setuptools
   run:
+    # nltk is not a required dependency but it is used in some examples, we included it
+    # on previous versions, it is kept here for backward compatibility.
     - nltk
     - numpy
     - python
