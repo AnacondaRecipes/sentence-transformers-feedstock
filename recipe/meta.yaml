@@ -50,7 +50,7 @@ test:
     - huggingface_accelerate
   commands:
     - pip check
-    - export PYTORCH_ENABLE_MPS_FALLBACK=1
+    - export PYTORCH_ENABLE_MPS_FALLBACK=1  # [not win]
     - pytest
 
 about:
