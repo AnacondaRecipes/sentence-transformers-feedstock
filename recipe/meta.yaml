@@ -1,5 +1,5 @@
 {% set name = "sentence-transformers" %}
-{% set version = "2.7.0" %}
+{% set version = "3.4.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,13 +7,10 @@ package:
 
 source:
   url: https://github.com/UKPLab/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: f474f390a30c6e4ebf58d525bb55b3ff5f3d9c4085b3eb99ffa987c1bed08c16
+  sha256: b7a1706e70f5d3a9a7b4812c287441ac3934390720e779d8bbff2e579643b1ac
 
 build:
-  # skip s390x and ppc64le because torchvision does not support these
-  skip: True  # [linux and (ppc64le or s390x)]
-  # transformers not on python 3.12
-  skip: True  # [py<36 or py>311]
+  skip: True  # [py<39]
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
@@ -24,24 +21,19 @@ requirements:
     - wheel
     - setuptools
   run:
-    # nltk is not a required dependency but it is used in some examples, we included it
-    # on previous versions, it is kept here for backward compatibility.
-    - nltk
-    - numpy
-    - python
+    - transformers >=4.41.0, <5.0.0
+    - tqdm
+    - pytorch >=1.11.0
     - scikit-learn
     - scipy
-    - pytorch >=1.11.0
-    - tqdm
-    - transformers >=4.34.0,<5.0.0
-    - huggingface_hub >=0.15.1
+    - huggingface_hub >=0.20.0
     - pillow
 
 test:
   source_files:
     - tests
-    - pytest.ini
     - examples
+    - pyproject.toml
   imports:
     - sentence_transformers
     - sentence_transformers.datasets
@@ -53,12 +45,15 @@ test:
   requires:
     - pip
     - pytest
+    - datasets
+    - huggingface_accelerate
   commands:
     - pip check
+    - export PYTORCH_ENABLE_MPS_FALLBACK=1
     - pytest
 
 about:
-  home: https://github.com/UKPLab/sentence-transformers
+  home: https://www.sbert.net
   license: Apache-2.0
   license_family: APACHE
   license_file: LICENSE
