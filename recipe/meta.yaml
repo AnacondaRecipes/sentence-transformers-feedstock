@@ -54,6 +54,10 @@ test:
 
     # ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443)
     {% set skip_tests = "test_pretrained" %}
+    # FileNotFoundError: [Errno 2] No such file or directory:  config.json
+    {% set skip_tests = skip_tests + " or test_load_with_safetensors" %}
+    # TypeError: MPS BFloat16 is only supported on MacOS 14 or newer
+    {% set skip_tests = skip_tests + " or test_bfloat16" %}
     - pytest -v -k "not ({{ skip_tests }})"
 
 about:
