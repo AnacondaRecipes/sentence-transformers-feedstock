@@ -60,6 +60,8 @@ test:
     {% set skip_tests = skip_tests + " or test_load_with_safetensors" %}
     # TypeError: MPS BFloat16 is only supported on MacOS 14 or newer
     {% set skip_tests = skip_tests + " or test_bfloat16" %}
+    # disabling 3rd party backend API dependend tests
+    {% set skip_tests = skip_tests + " or test_LabelAccuracyEvaluator or test_train_stsb or test_train_nli or test_model_card_base or test_model_card_data" %}
     - pytest -v -k "not ({{ skip_tests }})"
 
 about:
