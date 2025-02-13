@@ -54,6 +54,9 @@ test:
     - export HF_DATASETS_OFFLINE=1  # [not win]
     - export HF_HUB_OFFLINE=1  # [not win]
 
+    # OSError: We couldn't connect to 'https://huggingface.co' to load this file
+    {% set ignore_tests = " --ignore=tests/test_sentence_transformer" %}
+
     # ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443)
     {% set skip_tests = "test_pretrained" %}
     # huggingface_hub.utils._errors.HfHubHTTPError: 504 Server Error: Gateway Time-out
@@ -64,7 +67,7 @@ test:
     {% set skip_tests = skip_tests + " or test_bfloat16" %}
     # disabling 3rd party backend API dependend tests
     {% set skip_tests = skip_tests + " or test_LabelAccuracyEvaluator or test_train_stsb or test_train_nli or test_model_card_base or test_model_card_data" %}
-    - pytest -v -k "not ({{ skip_tests }})"
+    - pytest -v -k "not ({{ skip_tests }})" {{ ignore_tests }}
 
 about:
   home: https://www.sbert.net
