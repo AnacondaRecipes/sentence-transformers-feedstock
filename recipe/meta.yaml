@@ -55,7 +55,7 @@ test:
     - export HF_HUB_OFFLINE=1  # [not win]
 
     # OSError: We couldn't connect to 'https://huggingface.co' to load this file
-    {% set ignore_tests = " --ignore=tests/test_sentence_transformer" %}
+    {% set ignore_tests = " --ignore=tests/test_sentence_transformer.py" %}
 
     # ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443)
     {% set skip_tests = "test_pretrained" %}
