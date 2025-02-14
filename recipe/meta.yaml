@@ -66,6 +66,30 @@ test:
     {% set skip_tests = skip_tests + " or test_bfloat16" %}
     # disabling 3rd party backend API dependend tests
     {% set skip_tests = skip_tests + " or test_LabelAccuracyEvaluator or test_train_stsb or test_train_nli or test_model_card_base or test_model_card_data" %}
+    # other pack of tests relying on server or cached data
+    {% set skip_tests = skip_tests + " or test_simple" %}
+    {% set skip_tests = skip_tests + " or test_nanobeir_evaluator" %}
+    {% set skip_tests = skip_tests + " or test_loading_model2vec" %}
+    {% set skip_tests = skip_tests + " or test_cmnrl_same_grad" %}
+    {% set skip_tests = skip_tests + " or test_classifier_dropout_is_set" %}
+    {% set skip_tests = skip_tests + " or test_classifier_dropout_default_value" %}
+    {% set skip_tests = skip_tests + " or test_load_with_revision" %}
+    {% set skip_tests = skip_tests + " or test_rank" %}
+    {% set skip_tests = skip_tests + " or test_safe_serialization" %}
+    {% set skip_tests = skip_tests + " or test_paraphrase_mining" %}
+    {% set skip_tests = skip_tests + " or test_ParaphraseMiningEvaluator" %}
+    {% set skip_tests = skip_tests + " or test_TripletEvaluator" %}
+    {% set skip_tests = skip_tests + " or test_initialization_with_embedding_weights" %}
+    {% set skip_tests = skip_tests + " or test_initialization_with_embedding_dim" %}
+    {% set skip_tests = skip_tests + " or test_tokenize" %}
+    {% set skip_tests = skip_tests + " or test_forward" %}
+    {% set skip_tests = skip_tests + " or test_save_and_load" %}
+    {% set skip_tests = skip_tests + " or test_encode_token_embeddings" %}
+    {% set skip_tests = skip_tests + " or test_encode_single_sentences" %}
+    {% set skip_tests = skip_tests + " or test_encode_normalize" %}
+    {% set skip_tests = skip_tests + " or test_encode_tuple_sentences" %}
+    {% set skip_tests = skip_tests + " or test_simple_encode" %}
+
     - pytest -v -k "not ({{ skip_tests }})" {{ ignore_tests }}
 
 about:
