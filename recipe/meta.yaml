@@ -1,5 +1,5 @@
 {% set name = "sentence-transformers" %}
-{% set version = "3.4.1" %}
+{% set version = "4.1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://github.com/UKPLab/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: b7a1706e70f5d3a9a7b4812c287441ac3934390720e779d8bbff2e579643b1ac
+  sha256: 45c3874d1a504ad28ae2f1506589132a4f1ef4378be7271654e4a2db5d9a5b9a
 
 build:
-  skip: True  # [s390x or py<39]
+  skip: True  # [py<39]
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
@@ -29,6 +29,7 @@ requirements:
     - scipy
     - huggingface_hub >=0.20.0
     - pillow
+    - typing_extensions >=4.5.0
 
 test:
   source_files:
@@ -55,6 +56,7 @@ test:
 
     # OSError: We couldn't connect to 'https://huggingface.co' to load this file
     {% set ignore_tests = " --ignore=tests/test_sentence_transformer.py" %}
+    {% set ignore_tests = ignore_tests + " --ignore=tests/cross_encoder/test_cross_encoder.py" %}
 
     # ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443)
     {% set skip_tests = "test_pretrained" %}
@@ -104,7 +106,7 @@ about:
     BERT / RoBERTa / XLM-RoBERTa etc. and achieve state-of-the-art performance in various task. 
     Text is embedding in vector space such that similar text is close and can efficiently be 
     found using cosine similarity.
-  doc_url: https://pypi.org/project/sentence-transformers/
+  doc_url: https://pypi.org/project/sentence-transformers
   dev_url: https://github.com/UKPLab/sentence-transformers
 
 extra:
