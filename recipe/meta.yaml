@@ -20,14 +20,11 @@ requirements:
     - python
     - wheel
     - setuptools >=42
-    # Linter: Run dependencies listed in the cbc should also be present in the host section
-    - pytorch {{ pytorch }}
   run:
     - python
     - transformers >=4.41.0,<6.0.0
     - tqdm
-    # bounds set through run_exports:
-    - pytorch
+    - pytorch >=1.11.0
     - scikit-learn
     - scipy
     - huggingface_hub >=0.20.0
