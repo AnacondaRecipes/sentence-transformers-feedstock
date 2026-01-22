@@ -20,6 +20,8 @@ requirements:
     - python
     - wheel
     - setuptools >=42
+    # Linter: Run dependencies listed in the cbc should also be present in the host section
+    - pytorch
   run:
     - python
     - transformers >=4.41.0,<6.0.0
@@ -70,6 +72,7 @@ requirements:
     # {% set skip_tests = skip_tests + " or test_encode_tuple_sentences" %}
     # {% set skip_tests = skip_tests + " or test_simple_encode" %}
 
+{% set ignore_tests = "" %}
 {% set skip_tests = "" %}
 {% set deselect_tests = "" %}
 # https://github.com/pytorch/rl/issues/1198 
@@ -88,6 +91,8 @@ requirements:
 {% set skip_tests = skip_tests + " or test_encode_with_dataset_column" %}  # [osx]
 {% set skip_tests = skip_tests + " or test_empty_encode" %}  # [osx]
 {% set skip_tests = skip_tests + " or test_get_model_kwargs" %}  # [osx]
+# RuntimeError: isin_Tensor_Tensor_out only works on floating types on MPS for pre MacOS_14_0
+{% set ignore_tests = " --ignore=tests/util/test_hard_negatives.py" %}  # [osx]
 
 test:
   source_files:
@@ -105,6 +110,7 @@ test:
     - sentence_transformers.losses
     - sentence_transformers.model_card
     - sentence_transformers.models
+    - sentence_transformers.models.tokenizer
     - sentence_transformers.quantization
     - sentence_transformers.readers
     - sentence_transformers.sampler
@@ -121,14 +127,15 @@ test:
     - pillow
     # ImportError: Using the `Trainer` with `PyTorch` requires `accelerate>=0.26.0`
     - huggingface_accelerate >=0.26.0
+    - einops
   commands:
     - pip check
     - export PYTORCH_ENABLE_MPS_FALLBACK=1  # [osx]
-    # - export HF_DATASETS_OFFLINE=1  # [not win]
-    # - export HF_HUB_OFFLINE=1  # [not win]
-    # - export CUDA_VISIBLE_DEVICES="" # [not win]
-    # - export PYTORCH_DEVICE=cpu  # [not win]
-    - pytest -v -m "not slow" tests {{ deselect_tests }}
+    - export HF_DATASETS_OFFLINE=1  # [not win]
+    - export HF_HUB_OFFLINE=1  # [not win]
+    - export CUDA_VISIBLE_DEVICES="" # [not win]
+    - export PYTORCH_DEVICE=cpu  # [not win]
+    - pytest -v -m "not slow" tests {{ ignore_tests }}
 
 about:
   home: https://www.sbert.net
