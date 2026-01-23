@@ -34,11 +34,11 @@ requirements:
 
 {% set skip_tests = "" %}
 # Missing timm/torchvision for newer pythons
-{% set ignore_tests = "--ignore=test_jina_clip" %}
+{% set ignore_tests = "--ignore=tests/test_custom_models.py" %}
 # https://github.com/pytorch/rl/issues/1198 
-{% set skip_tests = "test_dense_load_and_save_in_other_precisions" %}  # [osx]
+# {% set skip_tests = "test_dense_load_and_save_in_other_precisions" %}  # [osx]
 # There is not full support for MPS in Pytorch: NotImplementedError: Could not run 'aten::_sparse_coo_tensor_with_dims_and_tensors' with arguments from the 'SparseMPS' backend.
-{% set skip_tests = skip_tests + " or test_decode_shapes" %}  # [osx]
+{% set skip_tests = skip_tests + "test_decode_shapes" %}  # [osx]
 {% set skip_tests = skip_tests + " or test_decode_token_types" %}  # [osx]
 {% set skip_tests = skip_tests + " or test_decode_top_k_respects_limit" %}  # [osx]
 {% set skip_tests = skip_tests + " or test_decode_handles_sparse_dense_inputs" %}  # [osx]
@@ -51,8 +51,17 @@ requirements:
 {% set skip_tests = skip_tests + " or test_encode_with_dataset_column" %}  # [osx]
 {% set skip_tests = skip_tests + " or test_empty_encode" %}  # [osx]
 {% set skip_tests = skip_tests + " or test_get_model_kwargs" %}  # [osx]
+{% set skip_tests = skip_tests + " or test_sparse_static_embedding_padding_ignored" %}  # [osx]
+{% set skip_tests = skip_tests + " or test_sparse_static_embedding_save_load" %}  # [osx]
+{% set skip_tests = skip_tests + " or test_opensearch_v2_distill_similarity" %}  # [osx]
+{% set skip_tests = skip_tests + " or test_opensearch_v3_distill_similarity" %}  # [osx]
+{% set skip_tests = skip_tests + " or test_load_and_encode" %}  # [osx]
+{% set skip_tests = skip_tests + " or test_trainer" %}  # [osx]
+
 # # E OSError: We couldn't connect to 'https://huggingface.co' to load this file, couldn't find it in the cached files
-{% set skip_tests = skip_tests + " or test_train_stsb or test_model_card_base or test_model_card_data" %}  # [osx]
+{% set skip_tests = skip_tests + "or test_load_with_safetensors or test_train_stsb or test_model_card_base or test_model_card_data" %}  # [osx]
+# # TypeError: MPS BFloat16 is only supported on MacOS 14 or newer
+{% set skip_tests = skip_tests + " or test_bfloat16" %}  # [osx]
 # RuntimeError: isin_Tensor_Tensor_out only works on floating types on MPS for pre MacOS_14_0
 {% set ignore_tests = ignore_tests + " --ignore=tests/util/test_hard_negatives.py" %}  # [osx]
 
@@ -99,7 +108,8 @@ test:
     - export HF_HUB_OFFLINE=1  # [not win]
     - export CUDA_VISIBLE_DEVICES="" # [not win]
     - export PYTORCH_DEVICE=cpu  # [not win]
-    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not({{ skip_tests }})"
+    - pytest -v -m "not slow" tests {{ ignore_tests }} # [not osx]
+    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests }})" # [osx]
 
 about:
   home: https://www.sbert.net
