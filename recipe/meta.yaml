@@ -99,7 +99,7 @@ test:
     - export HF_HUB_OFFLINE=1  # [not win]
     - export CUDA_VISIBLE_DEVICES="" # [not win]
     - export PYTORCH_DEVICE=cpu  # [not win]
-    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests }})"
+    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not({{ skip_tests }})"
 
 about:
   home: https://www.sbert.net
