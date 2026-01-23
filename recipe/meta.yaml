@@ -34,9 +34,9 @@ requirements:
 
 {% set skip_tests = "" %}
 # Missing timm/torchvision for newer pythons
-{% set ignore_tests = "test_jina_clip" %}
+{% set ignore_tests = "--ignore=test_jina_clip" %}
 # https://github.com/pytorch/rl/issues/1198 
-{% set ignore_tests = "test_dense_load_and_save_in_other_precisions" %}  # [osx]
+{% set skip_tests = "test_dense_load_and_save_in_other_precisions" %}  # [osx]
 # There is not full support for MPS in Pytorch: NotImplementedError: Could not run 'aten::_sparse_coo_tensor_with_dims_and_tensors' with arguments from the 'SparseMPS' backend.
 {% set skip_tests = skip_tests + " or test_decode_shapes" %}  # [osx]
 {% set skip_tests = skip_tests + " or test_decode_token_types" %}  # [osx]
