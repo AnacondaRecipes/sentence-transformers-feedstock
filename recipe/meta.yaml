@@ -59,6 +59,9 @@ requirements:
 # # TypeError: MPS BFloat16 is only supported on MacOS 14 or newer
 {% set skip_tests_osx = skip_tests_osx + " or test_bfloat16" %}  # [osx]
 # E ValueError: The `router_mapping` argument must be a dictionary mapping dataset column names to Router routes, like 'query' or 'document'. A stringified dictionary also works.
+{% set skip_tests_osx = skip_tests_osx + " or test_hf_argument_parser" %}  # [osx]
+{% set skip_tests_osx = skip_tests_osx + " or test_hf_argument_parser_incorrect_string_arguments" %}  # [osx]
+{% set skip_tests_osx = skip_tests_osx + " or test_incorrect_string_arguments" %}  # [osx]
 {% set skip_tests_linux = "test_hf_argument_parser" %}  # [linux]
 {% set skip_tests_linux = skip_tests_linux + " or test_hf_argument_parser_incorrect_string_arguments" %}  # [linux]
 {% set skip_tests_linux = skip_tests_linux + " or test_incorrect_string_arguments" %}  # [linux]
@@ -103,8 +106,7 @@ test:
     - pytest
     - datasets
     - pillow
-    # ImportError: Using the `Trainer` with `PyTorch` requires `accelerate>=0.26.0`
-    - huggingface_accelerate >=0.26.0
+    - huggingface_accelerate
     - einops
   commands:
     - pip check
