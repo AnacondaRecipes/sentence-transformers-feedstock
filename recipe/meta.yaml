@@ -10,9 +10,9 @@ source:
   sha256: b1cd2d33d9577cc84be8fb29684fe310c9bca75594b51acab804d52b9ac0c3e6
 
 build:
-  skip: true  # [py<310]
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true  # [py<310]
 
 requirements:
   host:
@@ -28,7 +28,7 @@ requirements:
     - numpy
     - scikit-learn
     - scipy
-    - sentence-transformers >=2.7.0,<6.0.0
+    - typing_extensions >=4.5.0
     - tqdm
   run_constrained:
     - huggingface_accelerate >=0.20.3
