@@ -12,7 +12,7 @@ source:
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  # No huggingface_accelerate for py>313
+  # No huggingface_accelerate <1.4 for py>313
   skip: true  # [py<310 or py>313]
 
 requirements:
