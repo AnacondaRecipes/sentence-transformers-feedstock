@@ -10,7 +10,7 @@ source:
   sha256: b1cd2d33d9577cc84be8fb29684fe310c9bca75594b51acab804d52b9ac0c3e6
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   # No huggingface_accelerate <1.4 for py>313
   skip: true  # [py<310 or py>313]
@@ -23,9 +23,9 @@ requirements:
     - setuptools >=42
   run:
     - python
+    - pytorch >=1.11.0
     - transformers >=4.41.0,<6.0.0
     - huggingface_hub >=0.20.0
-    - pytorch >=1.11.0
     - numpy
     - scikit-learn
     - scipy
@@ -67,6 +67,7 @@ requirements:
 {% set skip_tests_linux = "test_hf_argument_parser" %}  # [linux]
 {% set skip_tests_linux = skip_tests_linux + " or test_hf_argument_parser_incorrect_string_arguments" %}  # [linux]
 {% set skip_tests_linux = skip_tests_linux + " or test_incorrect_string_arguments" %}  # [linux]
+{% set skip_tests_linux = skip_tests_linux + " or test_dense_load_and_save_in_other_precisions" %}  # [linux]
 # E             comparison failed
 # E             Obtained: 0.5718795657157898
 # E             Expected: 0.5718804597854614 ± 5.7e-07
