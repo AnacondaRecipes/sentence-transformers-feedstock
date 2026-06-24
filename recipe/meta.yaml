@@ -1,5 +1,5 @@
 {% set name = "sentence-transformers" %}
-{% set version = "5.3.0" %}
+{% set version = "5.6.0" %}
 
 package:
   name: {{ name }}
@@ -7,32 +7,32 @@ package:
 
 source:
   url: https://github.com/huggingface/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: b1cd2d33d9577cc84be8fb29684fe310c9bca75594b51acab804d52b9ac0c3e6
+  sha256: eff423ee3ba47bd65c64a5047dcbc821ccf3151cf3e1f46a889dda0665584ad7
 
 build:
-  number: 1
+  number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  # No huggingface_accelerate <1.4 for py>313
-  skip: true  # [py<310 or py>313]
+  skip: true  # [py<310]
 
 requirements:
   host:
     - pip
     - python
     - wheel
-    - setuptools >=42
+    - setuptools >=77.0.3
   run:
     - python
-    - pytorch >=1.11.0
     - transformers >=4.41.0,<6.0.0
-    - huggingface_hub >=0.20.0
-    - numpy
-    - scikit-learn
-    - scipy
+    - huggingface_hub >=0.23.0
+    - pytorch >=1.11.0
+    - numpy >=1.20.0
+    - scikit-learn >=0.22.0
+    - scipy >=1.0.0
     - typing_extensions >=4.5.0
-    - tqdm
+    - tqdm >=4.0.0
   run_constrained:
     - huggingface_accelerate >=0.20.3
+    - datasets >=2.0.0
 
 # E  TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.
 {% set skip_tests_osx = "test_dense_load_and_save_in_other_precisions" %}  # [osx]
@@ -60,6 +60,7 @@ requirements:
 {% set skip_tests_osx = skip_tests_osx + " or test_load_with_safetensors or test_train_stsb or test_model_card_base or test_model_card_data" %}  # [osx]
 # # TypeError: MPS BFloat16 is only supported on MacOS 14 or newer
 {% set skip_tests_osx = skip_tests_osx + " or test_bfloat16" %}  # [osx]
+{% set skip_tests_osx = skip_tests_osx + " or test_listwise_loss_supports_low_precision" %}  # [osx]
 # E ValueError: The `router_mapping` argument must be a dictionary mapping dataset column names to Router routes, like 'query' or 'document'. A stringified dictionary also works.
 {% set skip_tests_osx = skip_tests_osx + " or test_hf_argument_parser" %}  # [osx]
 {% set skip_tests_osx = skip_tests_osx + " or test_hf_argument_parser_incorrect_string_arguments" %}  # [osx]
@@ -74,7 +75,15 @@ requirements:
 {% set skip_tests_linux = skip_tests_linux + " or test_cmnrl_same_grad" %}  # [linux]
 {% set ignore_tests = "" %}
 # Missing timm/torchvision for newer pythons
-{% set ignore_tests = "--ignore=tests/test_custom_models.py" %}
+{% set ignore_tests = "--ignore=tests/sentence_transformer/test_custom_models.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/base/modules/test_transformer.py" %}
+# Error on CI:
+# 429 Too Many Requests: you have reached your 'api' rate limit.
+{% set ignore_tests = ignore_tests + " --ignore=tests/base/modules/transformer/test_any_to_any.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/base/modules/transformer/test_feature_extraction.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/base/modules/transformer/test_fill_mask.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/base/modules/transformer/test_sequence_classification.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=tests/base/modules/transformer/test_text_generation.py" %}
 # RuntimeError: isin_Tensor_Tensor_out only works on floating types on MPS for pre MacOS_14_0
 {% set ignore_tests = ignore_tests + " --ignore=tests/util/test_hard_negatives.py" %}  # [osx]
 
@@ -131,7 +140,7 @@ about:
     Text is embedding in vector space such that similar text is close and can efficiently be 
     found using cosine similarity.
   doc_url: https://github.com/huggingface/sentence-transformers/blob/main/README.md
-  dev_url: https://github.com/UKPLab/sentence-transformers
+  dev_url: https://github.com/huggingface/sentence-transformers/
 
 extra:
   recipe-maintainers:
