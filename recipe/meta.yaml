@@ -90,10 +90,19 @@ requirements:
 # RuntimeError: isin_Tensor_Tensor_out only works on floating types on MPS for pre MacOS_14_0
 {% set ignore_tests = ignore_tests + " --ignore=tests/util/test_hard_negatives.py" %}  # [osx]
 {% set skip_tests_win = "test_safetensors" %}  # [win]
-{% set skip_tests_win_arm64 = "test_nanobeir_evaluator and not (test_nanobeir_evaluator_with_invalid_dataset or test_nanobeir_evaluator_empty_inputs)" %}  # [win and arm64]
-{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_train_stsb or (test_trainer[ and not sparse_encoder) or test_trainer_multi_dataset_errors" %}  # [win and arm64]
-{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_invalid_column_names or test_trainer_no_eval_dataset_with_eval_strategy or (test_trainer.py and test_data_collator)" %}  # [win and arm64]
-{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_get_batch_sampler or test_trainer_get_multi_dataset_batch_sampler or test_trainer_call_model_init_multi_loss" %}  # [win and arm64]
+# NanoBEIR dataset downloads hit the Hugging Face API rate limit; keep the offline edge cases.
+{% set skip_tests_win_arm64 = skip_tests_win + " or test_nanobeir_evaluator and not (test_nanobeir_evaluator_with_invalid_dataset or test_nanobeir_evaluator_empty_inputs)" %}  # [win and arm64]
+# STS-B dataset fixture downloads hit the same rate limit.
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_train_stsb" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or (test_trainer[ and not sparse_encoder)" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_multi_dataset_errors" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_invalid_column_names" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_no_eval_dataset_with_eval_strategy" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or (test_trainer.py and test_data_collator)" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_get_batch_sampler" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_get_multi_dataset_batch_sampler" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_call_model_init_multi_loss" %}  # [win and arm64]
+# Cross-encoder model cards can lack base-model metadata in CI.
 {% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or (cross_encoder and test_model_card_base)" %}  # [win and arm64]
 
 test:
@@ -132,7 +141,7 @@ test:
   commands:
     - pip check
     - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_win }})"  # [win and not arm64]
-    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_win }} or {{ skip_tests_win_arm64 }})"  # [win and arm64]
+    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_win_arm64 }})"  # [win and arm64]
     - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_linux }})" # [linux]
     - export PYTORCH_ENABLE_MPS_FALLBACK=1  # [osx]
     - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_osx }})" # [osx]
