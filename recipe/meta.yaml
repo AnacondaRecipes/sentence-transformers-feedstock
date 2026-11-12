@@ -1,5 +1,5 @@
 {% set name = "sentence-transformers" %}
-{% set version = "5.6.0" %}
+{% set version = "6.2.0" %}
 
 package:
   name: {{ name }}
@@ -7,12 +7,10 @@ package:
 
 source:
   url: https://github.com/huggingface/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: eff423ee3ba47bd65c64a5047dcbc821ccf3151cf3e1f46a889dda0665584ad7
-  patches:
-    - patches/xxhash-4-support.patch
+  sha256: 21fdaacf1c50a156417efe5f3c0394c611a02d15fc19b76fed34223114399623
 
 build:
-  number: 1
+  number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   skip: true  # [py<310]
 
@@ -20,24 +18,31 @@ requirements:
   host:
     - pip
     - python
-    - wheel
     - setuptools >=77.0.3
   run:
     - python
-    - transformers >=4.41.0,<6.0.0
-    - huggingface_hub >=0.23.0
-    - pytorch >=1.11.0
-    - numpy >=1.20.0
-    - scikit-learn >=0.22.0
+    - transformers >=5.0.0,<6.0.0
+    - tokenizers >=0.19
+    - huggingface_hub >=1.3.0,<3.0.0
+    - pytorch >=2.2
+    - numpy >=1.24.0
+    - scikit-learn >=1.1.0
     - scipy >=1.0.0
-    - typing_extensions >=4.5.0
+    - typing_extensions >=4.10.0
     - tqdm >=4.0.0
   run_constrained:
-    - huggingface_accelerate >=0.20.3
-    - datasets >=2.0.0
+    # extra train
+    - datasets >=2.16.0
+    - huggingface_accelerate >=1.3.0
+    # extra mergekit
+    - mergekit >=0.1.5
 
 # E  TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.
 {% set skip_tests_osx = "test_dense_load_and_save_in_other_precisions" %}  # [osx]
+# AssertionError: assert 'mps' in ('cpu', 'cuda')
+{% set skip_tests_osx = skip_tests_osx + " or test_device_property" %}  # [osx]
+# AssertionError: mini-batch 0 was re-predicted with different inputs
+{% set skip_tests_osx = skip_tests_osx + " or test_cached_ce_mnrl_prompt_reaches_the_backward_pass" %}  # [osx]
 # There is not full support for MPS in Pytorch: NotImplementedError: Could not run 'aten::_sparse_coo_tensor_with_dims_and_tensors' with arguments from the 'SparseMPS' backend.
 {% set skip_tests_osx = skip_tests_osx + " or test_decode_shapes" %}  # [osx]
 {% set skip_tests_osx = skip_tests_osx + " or test_decode_token_types" %}  # [osx]
@@ -76,6 +81,8 @@ requirements:
 # E             Obtained: 0.5718795657157898
 # E             Expected: 0.5718804597854614 ± 5.7e-07
 {% set skip_tests_linux = skip_tests_linux + " or test_cmnrl_same_grad" %}  # [linux]
+# E       RuntimeError: could not create a primitive descriptor for the matmul primitive.
+{% set skip_tests_linux = skip_tests_linux + " or test_hps_collapses_spurious_ties" %}  # [linux]
 {% set ignore_tests = "" %}
 # Missing timm/torchvision for newer pythons
 {% set ignore_tests = "--ignore=tests/sentence_transformer/test_custom_models.py" %}
@@ -102,6 +109,8 @@ requirements:
 {% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_get_batch_sampler" %}  # [win and arm64]
 {% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_get_multi_dataset_batch_sampler" %}  # [win and arm64]
 {% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_call_model_init_multi_loss" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_get_eval_dataloader_with_persistent_workers" %}  # [win and arm64]
+{% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or test_trainer_evaluate_caches_eval_dataloaders_per_dataset" %}  # [win and arm64]
 # Cross-encoder model cards can lack base-model metadata in CI.
 {% set skip_tests_win_arm64 = skip_tests_win_arm64 + " or (cross_encoder and test_model_card_base)" %}  # [win and arm64]
 
@@ -140,11 +149,11 @@ test:
     - einops
   commands:
     - pip check
-    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_win }})"  # [win and not arm64]
-    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_win_arm64 }})"  # [win and arm64]
-    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_linux }})" # [linux]
+    - pytest -vv -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_win }})"  # [win and not arm64]
+    - pytest -vv -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_win_arm64 }})"  # [win and arm64]
+    - pytest -vv -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_linux }})" # [linux]
     - export PYTORCH_ENABLE_MPS_FALLBACK=1  # [osx]
-    - pytest -v -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_osx }})" # [osx]
+    - pytest -vv -m "not slow" tests {{ ignore_tests }} -k "not ({{ skip_tests_osx }})" # [osx]
 
 about:
   home: https://www.sbert.net
